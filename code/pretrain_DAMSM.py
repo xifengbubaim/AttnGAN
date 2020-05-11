@@ -5,7 +5,7 @@ from miscc.utils import build_super_images
 from miscc.losses import sent_loss, words_loss
 from miscc.config import cfg, cfg_from_file
 
-from datasets import TextDataset
+from datasets import FaceDataset, TextDataset
 from datasets import prepare_data
 
 from model import RNN_ENCODER, CNN_ENCODER
@@ -38,7 +38,7 @@ def parse_args():
     parser = argparse.ArgumentParser(description='Train a DAMSM network')
     parser.add_argument('--cfg', dest='cfg_file',
                         help='optional config file',
-                        default='cfg/DAMSM/bird.yml', type=str)
+                        default='cfg/DAMSM/face.yml', type=str)
     parser.add_argument('--gpu', dest='gpu_id', type=int, default=0)
     parser.add_argument('--data_dir', dest='data_dir', type=str, default='')
     parser.add_argument('--manualSeed', type=int, help='manual seed')
@@ -100,11 +100,11 @@ def train(dataloader, cnn_model, rnn_model, batch_size,
         if step % UPDATE_INTERVAL == 0:
             count = epoch * len(dataloader) + step
 
-            s_cur_loss0 = s_total_loss0[0] / UPDATE_INTERVAL
-            s_cur_loss1 = s_total_loss1[0] / UPDATE_INTERVAL
+            s_cur_loss0 = s_total_loss0 / UPDATE_INTERVAL
+            s_cur_loss1 = s_total_loss1 / UPDATE_INTERVAL
 
-            w_cur_loss0 = w_total_loss0[0] / UPDATE_INTERVAL
-            w_cur_loss1 = w_total_loss1[0] / UPDATE_INTERVAL
+            w_cur_loss0 = w_total_loss0 / UPDATE_INTERVAL
+            w_cur_loss1 = w_total_loss1 / UPDATE_INTERVAL
 
             elapsed = time.time() - start_time
             print('| epoch {:3d} | {:5d}/{:5d} batches | ms/batch {:5.2f} | '
@@ -238,18 +238,18 @@ if __name__ == "__main__":
         transforms.Resize(int(imsize * 76 / 64)),
         transforms.RandomCrop(imsize),
         transforms.RandomHorizontalFlip()])
-    dataset = TextDataset(cfg.DATA_DIR, 'train',
+    dataset = FaceDataset(cfg.DATA_DIR, 'train',
                           base_size=cfg.TREE.BASE_SIZE,
                           transform=image_transform)
 
-    print(dataset.n_words, dataset.embeddings_num)
+    print(dataset.n_words)
     assert dataset
     dataloader = torch.utils.data.DataLoader(
         dataset, batch_size=batch_size, drop_last=True,
         shuffle=True, num_workers=int(cfg.WORKERS))
 
     # # validation data #
-    dataset_val = TextDataset(cfg.DATA_DIR, 'test',
+    dataset_val = FaceDataset(cfg.DATA_DIR, 'test',
                               base_size=cfg.TREE.BASE_SIZE,
                               transform=image_transform)
     dataloader_val = torch.utils.data.DataLoader(

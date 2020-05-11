@@ -20,8 +20,9 @@ if sys.version_info[0] == 2:
 else:
     import pickle
 
-from werkzeug.contrib.cache import SimpleCache
-cache = SimpleCache()
+# from werkzeug.contrib.cache import
+from flask_caching import Cache
+cache = Cache(config={'CACHE_TYPE': 'simple'})
 
 def vectorize_caption(wordtoix, caption, copies=2):
     # create caption vector
@@ -119,9 +120,9 @@ def generate(caption, wordtoix, ixtoword, text_encoder, netG, blob_service, copi
             im.save(stream, format="png")
             stream.seek(0)
             if copies > 2:
-                blob_name = '%s/%d/%s_g%d.png' % (prefix, j, "bird", k)
+                blob_name = '%s/%d/%s_g%d.png' % (prefix, j, "face", k)
             else:
-                blob_name = '%s/%s_g%d.png' % (prefix, "bird", k)
+                blob_name = '%s/%s_g%d.png' % (prefix, "face", k)
             blob_service.create_blob_from_stream(container_name, blob_name, stream)
             urls.append(full_path % blob_name)
 
@@ -223,7 +224,7 @@ def eval(caption):
     return response
 
 if __name__ == "__main__":
-    caption = "the bird has a yellow crown and a black eyering that is round"
+    caption = "the face has a yellow crown and a black eyering that is round"
 
     # load configuration
     #cfg_from_file('eval_bird.yml')

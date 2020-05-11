@@ -53,8 +53,8 @@ def drawCaption(convas, captions, ixtoword, vis_size, off1=2, off2=2):
 def build_super_images(real_imgs, captions, ixtoword,
                        attn_maps, att_sze, lr_imgs=None,
                        batch_size=cfg.TRAIN.BATCH_SIZE,
-                       max_word_num=cfg.TEXT.WORDS_NUM):
-    nvis = 8
+                       max_word_num=30):
+    nvis = 4
     real_imgs = real_imgs[:nvis]
     if lr_imgs is not None:
         lr_imgs = lr_imgs[:nvis]
@@ -71,7 +71,7 @@ def build_super_images(real_imgs, captions, ixtoword,
     for i in range(max_word_num):
         istart = (i + 2) * (vis_size + 2)
         iend = (i + 3) * (vis_size + 2)
-        text_convas[:, istart:iend, :] = COLOR_DIC[i]
+        text_convas[:, istart:iend, :] = COLOR_DIC[i % 20]
 
 
     real_imgs = \

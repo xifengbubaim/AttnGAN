@@ -58,9 +58,9 @@ __C.GAN.B_DCGAN = False
 
 
 __C.TEXT = edict()
-__C.TEXT.CAPTIONS_PER_IMAGE = 10
+# __C.TEXT.CAPTIONS_PER_IMAGE = 10
 __C.TEXT.EMBEDDING_DIM = 256
-__C.TEXT.WORDS_NUM = 18
+__C.TEXT.WORDS_NUM = 85
 
 
 def _merge_a_into_b(a, b):

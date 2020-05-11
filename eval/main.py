@@ -13,7 +13,7 @@ enable(os.environ["TELEMETRY"])
 app = Flask(__name__)
 app.wsgi_app = WSGIApplication(os.environ["TELEMETRY"], app.wsgi_app)
 
-@app.route('/api/v1.0/bird', methods=['POST'])
+@app.route('/api/v1.0/face', methods=['POST'])
 def create_bird():
     if not request.json or not 'caption' in request.json:
         abort(400)
@@ -33,7 +33,7 @@ def create_bird():
         'caption': caption,
         'elapsed': t1 - t0
     }
-    return jsonify({'bird': response}), 201
+    return jsonify({'face': response}), 201
 
 @app.route('/api/v1.0/birds', methods=['POST'])
 def create_birds():
@@ -56,7 +56,7 @@ def create_birds():
         'caption': caption,
         'elapsed': t1 - t0
     }
-    return jsonify({'bird': response}), 201
+    return jsonify({'face': response}), 201
 
 @app.route('/', methods=['GET'])
 def get_bird():

@@ -24,12 +24,12 @@ def sent_loss(cnn_code, rnn_code, labels, class_ids,
     masks = []
     if class_ids is not None:
         for i in range(batch_size):
-            mask = (class_ids == class_ids[i]).astype(np.uint8)
+            mask = (class_ids == class_ids[i]).astype(np.bool)
             mask[i] = 0
             masks.append(mask.reshape((1, -1)))
         masks = np.concatenate(masks, 0)
         # masks: batch_size x batch_size
-        masks = torch.ByteTensor(masks)
+        masks = torch.from_numpy(masks)
         if cfg.CUDA:
             masks = masks.cuda()
 
@@ -71,7 +71,7 @@ def words_loss(img_features, words_emb, labels,
     cap_lens = cap_lens.data.tolist()
     for i in range(batch_size):
         if class_ids is not None:
-            mask = (class_ids == class_ids[i]).astype(np.uint8)
+            mask = (class_ids == class_ids[i]).astype(np.bool)
             mask[i] = 0
             masks.append(mask.reshape((1, -1)))
         # Get the i-th text description
@@ -116,7 +116,7 @@ def words_loss(img_features, words_emb, labels,
     if class_ids is not None:
         masks = np.concatenate(masks, 0)
         # masks: batch_size x batch_size
-        masks = torch.ByteTensor(masks)
+        masks = torch.from_numpy(masks)
         if cfg.CUDA:
             masks = masks.cuda()
 
